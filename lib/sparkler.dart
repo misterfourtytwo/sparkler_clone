@@ -3,42 +3,38 @@ import 'dart:math';
 import 'package:animate_sparkler/particle.dart';
 import 'package:flutter/material.dart';
 
-class Sparkler extends StatefulWidget {
-  @override
-  _SparklerState createState() => _SparklerState();
-}
-
-class _SparklerState extends State<Sparkler> {
-  final double width = 300;
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class Sparkler extends StatelessWidget {
+  final double height = 400;
+  final double width = 320;
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Container(
-      width: width,
       child: SizedBox(
-          height: 100,
-          child: Stack(
-            children: getParticles(),
-          )),
-    ));
+        height: height,
+        width: width,
+        child: Stack(
+          children: getParticles(),
+        ),
+      ),
+    );
   }
 
-  List<Widget> getParticles() {
-    List<Widget> particles = List();
-    int maxParticles = 160;
-    for (var i = 1; i <= maxParticles; i++) {
-      particles.add(Padding(
-          padding: EdgeInsets.only(left: 0.5 * width, top: 20),
+  List<Widget> getParticles([int count = 360]) {
+    final List<Widget> particles = <Widget>[
+      for (int i = 1; i <= count; i++)
+        // center child its top is in the center of stack
+        Positioned(
+          left: .5 * width,
+          top: .5 * height,
+          // rotate random angle, with axis in stack center
           child: Transform.rotate(
-              angle: maxParticles / i * pi,
-              child: Padding(
-                  padding: EdgeInsets.only(top: 40), child: Particle()))));
-    }
+            alignment: Alignment.topCenter,
+            angle: 2 * pi * Random().nextDouble(),
+            child: Particle(),
+          ),
+        ),
+    ];
+
     return particles;
   }
 }

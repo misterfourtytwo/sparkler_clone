@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:animate_sparkler/particle_painter.dart';
 import 'package:flutter/material.dart';
 
 class Particle extends StatefulWidget {
-  final Duration duration;
+  final Duration growDuration;
+  final Duration delayDuration;
+
   Particle({
-    this.duration = const Duration(milliseconds: 200),
     Key key,
+    this.growDuration = const Duration(milliseconds: 420),
+    this.delayDuration = const Duration(milliseconds: 42),
   }) : super(key: key);
 
   @override
@@ -14,42 +19,64 @@ class Particle extends StatefulWidget {
 
 class _ParticleState extends State<Particle>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  double maxLengthModifier;
+  bool visible;
+  double arcImpact;
+
+  AnimationController _animationCtrl;
+
   @override
   void initState() {
     super.initState();
-    this._controller = new AnimationController(
+
+    this._animationCtrl = new AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: widget.growDuration * Random().nextDouble(),
     );
-    _startNextAnimation();
-    _controller.addStatusListener((status) {
+
+    _startAnimation(widget.growDuration);
+
+    _animationCtrl.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        _startNextAnimation();
+        visible = false;
+        Future.delayed(
+          widget.delayDuration * Random().nextDouble(),
+        ).then(
+          (_) => _startAnimation(widget.growDuration * Random().nextDouble()),
+        );
       }
     });
-    _controller.addListener(() => setState(() {}));
+
+    _animationCtrl.addListener(() => setState(() {}));
   }
 
-  void _startNextAnimation([Duration after]) {
-    Future.delayed(Duration(milliseconds: 200), () {
-      _controller.forward(from: 0.0);
-    });
+  void _startAnimation([Duration duration]) {
+    maxLengthModifier = Random().nextDouble();
+    visible = true;
+    arcImpact = Random().nextDouble() * 2 - 1;
+    _animationCtrl.forward(from: 0.0);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animationCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 2,
-      height: 240,
-      child: CustomPaint(
-        painter: ParticlePainter(currentLifetime: _controller.value),
+      width: 1.5,
+      height: 100,
+      child: Opacity(
+        opacity: visible ? 1 : 0,
+        child: CustomPaint(
+          painter: ParticlePainter(
+            growProgress: _animationCtrl.value,
+            maxLengthModifier: maxLengthModifier,
+            arcImpact: arcImpact,
+          ),
+        ),
       ),
     );
   }

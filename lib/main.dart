@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:animate_sparkler/sparkler.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +11,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(primarySwatch: Colors.amber),
+        theme: ThemeData(primarySwatch: Colors.indigo),
         home: Scaffold(
+          backgroundColor: Colors.indigo[300],
           body: SafeArea(
-            child: Container(
-                padding: EdgeInsets.all(32),
-                color: Colors.red[200],
-                child: BodyWidget()),
+            child: Container(padding: EdgeInsets.all(32), child: BodyWidget()),
           ),
         ));
   }
