@@ -1,5 +1,5 @@
 import 'package:animate_sparkler/fuse_painter.dart';
-import 'package:animate_sparkler/particle.dart';
+import 'package:animate_sparkler/particle_box.dart';
 import 'package:flutter/material.dart';
 
 const int count = 400;
@@ -53,14 +53,12 @@ class _SparklerState extends State<Sparkler>
                   painter: FusePainter(progress: _ctrl.value),
                 ),
                 if (_ctrl.isAnimating)
-                  for (int i = 1; i <= count; i++)
-                    // center child its top is in the center of stack
-                    Positioned(
-                      left: _ctrl.value * widget.width,
-                      top: .5 * widget.height,
-                      // rotate random angle, with axis in stack center
-                      child: ParticleAnimator(),
-                    ),
+                  ParticleBox(
+                    progress: _ctrl.value,
+                    width: widget.width,
+                    height: widget.height,
+                    count: count,
+                  ),
               ],
             ),
           ),
