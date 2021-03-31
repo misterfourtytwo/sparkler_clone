@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ParticleStarPainter extends CustomPainter {
@@ -19,11 +21,17 @@ class ParticleStarPainter extends CustomPainter {
     Paint paint = Paint();
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = width * 0.25;
-    paint.color = Color.fromRGBO(255, 255, 160, 1.0);
+    paint.color = Color.fromRGBO(
+      200 + Random().nextInt(55),
+      200 + Random().nextInt(55),
+      100 + Random().nextInt(60),
+      1.0,
+    );
 
     Path path = Path();
     double starSize = size.width * 2.5;
     double starBottom = height * starPosition;
+
     path.moveTo(0, starBottom - starSize);
     path.lineTo(starSize, starBottom);
     path.moveTo(starSize, starBottom - starSize);
