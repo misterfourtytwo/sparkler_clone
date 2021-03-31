@@ -44,10 +44,13 @@ class FusePainter extends CustomPainter {
   void _drawIntactStick(double burntStickWidth, Size size, Canvas canvas) {
     Paint paint = Paint()..color = Color.fromARGB(255, 100, 100, 100);
     Path path = Path()
-      ..addRRect(RRect.fromRectAndRadius(
+      ..addRRect(
+        RRect.fromRectAndRadius(
           Rect.fromLTWH(burntStickWidth, size.height / 2 - height / 2,
               size.width - burntStickWidth, height),
-          Radius.circular(3)));
+          Radius.circular(3),
+        ),
+      );
     canvas.drawPath(path, paint);
   }
 
