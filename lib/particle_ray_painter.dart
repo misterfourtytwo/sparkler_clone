@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ParticlePainter extends CustomPainter {
+class ParticleRayPainter extends CustomPainter {
   final double growProgress;
   final double maxLengthModifier;
   final double arcImpact;
 
-  const ParticlePainter({
+  const ParticleRayPainter({
     @required this.growProgress,
     this.maxLengthModifier = 1.0,
-    this.arcImpact,
+    this.arcImpact = 0,
   });
 
   @override
@@ -17,18 +17,16 @@ class ParticlePainter extends CustomPainter {
     final double height = growProgress * size.height * maxLengthModifier;
 
     Paint paint = Paint();
-
     LinearGradient gradient = LinearGradient(
-      colors: <Color>[
-        Colors.yellowAccent,
-        Colors.orangeAccent,
-        Color.fromARGB(30, 255, 255, 255),
-        Color.fromARGB(30, 255, 255, 255),
+      colors: [
+        Colors.transparent,
+        Color.fromRGBO(255, 255, 160, 1.0),
+        Color.fromRGBO(255, 255, 160, 0.7),
+        Color.fromRGBO(255, 180, 120, 0.7)
       ],
-      stops: [0, .3, .9, 1],
+      stops: [0, size.height * growProgress / 30, 0.6, 1.0],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      // <double>[0, 0.3, 0.9, 1.0],
     );
 
     Rect rect = Rect.fromLTWH(
@@ -49,9 +47,9 @@ class ParticlePainter extends CustomPainter {
       ..cubicTo(
         0,
         0,
-        width * 10 * arcImpact,
-        height * (arcImpact + 1 / 2),
-        width,
+        width * 2 * arcImpact,
+        height * .5,
+        0,
         height,
       );
 

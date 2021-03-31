@@ -13,7 +13,7 @@ class App extends StatelessWidget {
     return MaterialApp(
         theme: ThemeData(primarySwatch: Colors.indigo),
         home: Scaffold(
-          backgroundColor: Colors.indigo[300],
+          backgroundColor: Colors.black,
           body: SafeArea(
             child: Container(padding: EdgeInsets.all(32), child: BodyWidget()),
           ),

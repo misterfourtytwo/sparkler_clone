@@ -1,27 +1,30 @@
 import 'dart:math';
 
-import 'package:animate_sparkler/particle_painter.dart';
+import 'package:animate_sparkler/particle_ray_painter.dart';
+import 'package:animate_sparkler/particle_star_painter.dart';
 import 'package:flutter/material.dart';
 
-class Particle extends StatefulWidget {
+class ParticleAnimator extends StatefulWidget {
   final Duration growDuration;
   final Duration delayDuration;
 
-  Particle({
+  ParticleAnimator({
     Key key,
-    this.growDuration = const Duration(milliseconds: 420),
-    this.delayDuration = const Duration(milliseconds: 42),
+    this.growDuration = const Duration(milliseconds: 1000),
+    this.delayDuration = const Duration(milliseconds: 500),
   }) : super(key: key);
 
   @override
-  _ParticleState createState() => _ParticleState();
+  _ParticleAnimatorState createState() => _ParticleAnimatorState();
 }
 
-class _ParticleState extends State<Particle>
+class _ParticleAnimatorState extends State<ParticleAnimator>
     with SingleTickerProviderStateMixin {
   double maxLengthModifier;
   bool visible;
   double arcImpact;
+  bool showStar;
+  double starPosition;
 
   AnimationController _animationCtrl;
 
@@ -52,8 +55,13 @@ class _ParticleState extends State<Particle>
 
   void _startAnimation([Duration duration]) {
     maxLengthModifier = Random().nextDouble();
+    showStar = Random().nextDouble() < 0.3;
+    if (showStar) {
+      starPosition = Random().nextDouble() + 0.5;
+    } else {
+      arcImpact = Random().nextDouble() * 2 - 1;
+    }
     visible = true;
-    arcImpact = Random().nextDouble() * 2 - 1;
     _animationCtrl.forward(from: 0.0);
   }
 
@@ -65,16 +73,26 @@ class _ParticleState extends State<Particle>
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 1.5,
-      height: 100,
-      child: Opacity(
-        opacity: visible ? 1 : 0,
-        child: CustomPaint(
-          painter: ParticlePainter(
-            growProgress: _animationCtrl.value,
-            maxLengthModifier: maxLengthModifier,
-            arcImpact: arcImpact,
+    return Transform.rotate(
+      alignment: Alignment.topCenter,
+      angle: 2 * pi * Random().nextDouble(),
+      child: SizedBox(
+        width: 1.5,
+        height: 60,
+        child: Opacity(
+          opacity: visible ? 1 : 0,
+          child: CustomPaint(
+            painter: showStar
+                ? ParticleStarPainter(
+                    growProgress: _animationCtrl.value,
+                    maxLengthModifier: maxLengthModifier,
+                    starPosition: starPosition,
+                  )
+                : ParticleRayPainter(
+                    growProgress: _animationCtrl.value,
+                    maxLengthModifier: maxLengthModifier,
+                    arcImpact: arcImpact,
+                  ),
           ),
         ),
       ),
